@@ -15,7 +15,7 @@ const userRoutes = require("./src/user/routes");
 const conversationRoutes = require("./src/conversation/routes");
 
 //middleware
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/auth", authRoutes);
@@ -26,7 +26,7 @@ const server = app.listen(port, () => {
 	console.log(`API running on port number ${port}`)
 })
 
-const io = require('socket.io')(server, { cors: { origin: '*' } });
+const io = require('socket.io')(server, { cors: { origin: process.env.CLIENT_URL } });
 
 io.on('connection', socket => {
 	const id = socket.handshake.query.id;
