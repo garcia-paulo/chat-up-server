@@ -64,12 +64,17 @@ exports.createUser = async (req, res) => {
 exports.prepareUpdateUser = async (req, res, next) => {
 	let form = new formidable.IncomingForm();
 	form.keepExtensions = true;
+
 	form.parse(req, (err, fields, files) => {
 		if (err) {
 			return res.status(400).json({ error: "Foto não pode ser atualizada." })
 		}
 
 		let user = req.profile;
+		if (fields.password === '') {
+			delete fields.password;
+		}
+
 		user = _.extend(user, fields);
 
 		if (files.photo) {
@@ -84,7 +89,8 @@ exports.prepareUpdateUser = async (req, res, next) => {
 }
 
 exports.updateUser = (req, res) => {
-	user = req.body;
+	const user = req.body;
+
 	user.save((err, results) => {
 		if (err) {
 			return res.status(400).json({ error: err });
